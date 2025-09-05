@@ -15,14 +15,11 @@ const almacenamiento = multer.diskStorage({
 
 const subidas = multer({storage: almacenamiento});
 
-//Crear las rutas necesarias para acceder desde localhost/..ruta
 
-
-//rutas de prueba
 router.get("/ruta-de-prueba",ArticuloControlador.prueba);
 router.get("/curso",ArticuloControlador.curso);
+router.get("/rutas",ArticuloControlador.rutas);
 
-//ruta util
 router.post("/crear",ArticuloControlador.crear);
 router.get("/listar",ArticuloControlador.listar);
 router.get("/articulo/:id",ArticuloControlador.uno);

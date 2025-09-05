@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend para API de Artículos</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        button { margin: 5px; padding: 10px; }
+        #output { margin-top: 20px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>Interfaz para API de Artículos</h1>
+    <button onclick="listarArticulos()">Listar Artículos</button>
+    <button onclick="crearArticulo()">Crear Artículo</button>
+    <button onclick="mostrarRutas()">Mostrar Rutas</button>
+    <div id="output"></div>
+
+    <script>
+        const baseURL = 'http://localhost:3900/api';
+
+        function mostrarRutas() {
+            fetch(`${baseURL}/rutas`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function listarArticulos() {
+            fetch(`${baseURL}/listar`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function crearArticulo() {
+            const titulo = prompt('Título:');
+            const contenido = prompt('Contenido:');
+            if (titulo && contenido) {
+                fetch(`${baseURL}/crear`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ titulo, contenido })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+    </script>
+</body>
+</html>
