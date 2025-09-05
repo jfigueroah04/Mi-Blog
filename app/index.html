@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Blog - Desarrollo Web</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="preloader">
+        <div class="loader-content">
+            <img src="./snoopy.gif" alt="Snoopy" class="preloader-img">
+            <p>Espera un ratito...</p>
+        </div>
+    </div>
+
+    <div class="animated-background"></div>
+
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <img src="/favicon.ico" alt="Logo" onclick="volverInicio()">
+            </div>
+            <ul class="navbar-menu">
+                <li class="navbar-item"><a href="#welcome" onclick="scrollToSection('welcome')">Inicio</a></li>
+                <li class="navbar-item"><a href="#articulos-destacados" onclick="scrollToSection('articulos-destacados')">Artículos</a></li>
+                <li class="navbar-item"><a href="#carrusel-section" onclick="scrollToSection('carrusel-section')">Galería</a></li>
+                <li class="navbar-item"><a href="#autor-section" onclick="scrollToSection('autor-section')">Autor</a></li>
+                <li class="navbar-item"><a href="#footer" onclick="scrollToSection('footer')">Contacto</a></li>
+            </ul>
+            <div class="navbar-github">
+                <a href="https://github.com/jfigueroah04/Mi-Blog" target="_blank" class="github-btn">
+                    <i class="fab fa-github"></i> Repositorio
+                </a>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">BIENVENIDO A MI <span>BLOG</span></h1>
+            <p class="hero-desc">Descubre artículos increíbles y comparte tus pensamientos</p>
+            <div class="hero-buttons">
+                <button class="btn-hero" onclick="scrollToSection('articulos-destacados')">Explorar Artículos</button>
+                <button class="btn-hero btn-secondary" onclick="scrollToSection('autor-section')">Sobre el Blog</button>
+            </div>
+        </div>
+        <div class="hero-img">
+            <img src="/snoopy.gif" alt="Snoopy" />
+        </div>
+    </section>
+
+    <main>
+        <!-- Gestión de Artículos -->
+        <section id="welcome" class="section">
+            <div class="section-header">
+                <h2>Gestión de Artículos</h2>
+                <p>Administra tus artículos de blog fácilmente</p>
+            </div>
+            
+            <div id="conexion-status" class="conexion-status">Verificando conexión...</div>
+            
+            <div class="botones-principales">
+                <button id="btn-listar" class="btn-animated"><i class="fas fa-list"></i> Listar Artículos</button>
+                <button id="btn-crear" class="btn-animated"><i class="fas fa-plus"></i> Crear Artículo</button>
+                <button id="btn-obtener" class="btn-animated"><i class="fas fa-search"></i> Obtener Artículo</button>
+                <button id="btn-actualizar" class="btn-animated"><i class="fas fa-edit"></i> Actualizar Artículo</button>
+                <button id="btn-borrar" class="btn-animated"><i class="fas fa-trash"></i> Borrar Artículo</button>
+                <button id="btn-rutas" class="btn-animated"><i class="fas fa-route"></i> Ver Rutas</button>
+            </div>
+            
+            <!-- Tabla de artículos -->
+            <div class="table-container">
+                <table id="tabla-articulos">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Título</th>
+                            <th>Contenido</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-articulos">
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="div-crear" class="form-container">
+                <h3>Crear Nuevo Artículo</h3>
+                <form id="form-crear">
+                    <input type="text" id="titulo" placeholder="Título" required>
+                    <textarea id="contenido" placeholder="Contenido" required></textarea>
+                    <button type="submit" class="btn-animated">Crear Artículo</button>
+                </form>
+            </div>
+            
+            <div id="div-obtener" class="form-container">
+                <h3>Obtener Artículo Específico</h3>
+                <div class="input-group">
+                    <input type="text" id="id-obtener" placeholder="Ingresa el ID del artículo">
+                    <button id="btn-obtener-submit" class="btn-animated"><i class="fas fa-search"></i> Obtener</button>
+                </div>
+                <div id="resultado-obtener" class="resultado-container"></div>
+            </div>
+            
+            <div id="div-actualizar" class="form-container">
+                <h3>Actualizar Artículo</h3>
+                <input type="text" id="id-actualizar" placeholder="ID del artículo">
+                <input type="text" id="titulo-actualizar" placeholder="Nuevo título">
+                <textarea id="contenido-actualizar" placeholder="Nuevo contenido"></textarea>
+                <button id="btn-actualizar-submit" class="btn-animated"><i class="fas fa-edit"></i> Actualizar</button>
+            </div>
+            
+            <div id="div-borrar" class="form-container">
+                <h3>Borrar Artículo</h3>
+                <div class="input-group">
+                    <input type="text" id="id-borrar" placeholder="ID del artículo a borrar">
+                    <button id="btn-borrar-submit" class="btn-animated btn-danger"><i class="fas fa-trash"></i> Borrar</button>
+                </div>
+            </div>
+            
+            <div id="div-rutas" class="form-container">
+                <h3>Rutas Disponibles</h3>
+                <div id="lista-rutas" class="rutas-container"></div>
+            </div>
+        </section>
+
+        <section id="articulos-destacados" class="articulos-destacados section">
+            <div class="section-header">
+                <h2>Artículos Recientes</h2>
+                <p>Explora los últimos contenidos publicados</p>
+            </div>
+            <div class="articulos-grid" id="articulos-grid">
+            </div>
+        </section>
+
+        <section id="autor-section" class="autor-section section">
+            <div class="section-header">
+                <h2>Sobre el Blog</h2>
+            </div>
+            <div class="autor-content">
+                <div class="autor-info">
+                    <p><strong>Labo - Blog</strong> 
+                    <p>Este proyecto es un blog full-stack desarrollado con:</p>
+                    <ul>
+                        <li>Backend: Node.js + Express + MongoDB</li>
+                        <li>Frontend: HTML + CSS + JavaScript + Vite</li>
+                        <li>Características: CRUD completo, responsive design</li>
+                    </ul>
+                    <p>y solo eso...</p>
+                </div>
+                <div class="autor-img">
+                    <img src="public/img/2.jpg" alt="Daniel Figueroa" />
+                    <div class="autor-badge">Daniel Figueroa</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Carrusel de Imágenes -->
+        <section id="carrusel-section" class="carrusel-section section">
+            <div class="section-header">
+                <h2>Galería de Imágenes</h2>
+                <p>Algunas capturas y recursos del blog</p>
+            </div>
+            <div class="carrusel-container">
+                <div class="carrusel">
+                    <div class="carrusel-item">
+                        <img src="/snoopy.gif" alt="Imagen 1">
+                    </div>
+                    <div class="carrusel-item">
+                        <img src="/Apenado.png" alt="Imagen 2">
+                    </div>
+                    <div class="carrusel-item">
+                        <img src="/gracioso.png" alt="Imagen 3">
+                    </div>
+                    <div class="carrusel-item">
+                        <img src="/wood.png" alt="Imagen 4">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer id="footer" class="footer">
+        <div class="footer-content">
+            <div class="footer-logo-block">
+                <img src="/favicon.ico" alt="Mi Blog Logo" class="footer-logo" />
+                <div class="footer-description">Tu fuente de artículos increíbles y pensamientos compartidos</div>
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>Acerca de</h4>
+                    <ul>
+                        <li><a href="#autor-section">Sobre Mí</a></li>
+                        <li><a href="#footer">Contacto</a></li>
+                        <li><a href="#">Términos y Condiciones</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Categorías</h4>
+                    <ul>
+                        <li><a href="#">Tecnología</a></li>
+                        <li><a href="#">Programación</a></li>
+                        <li><a href="#">Desarrollo Web</a></li>
+                        <li><a href="#">Opiniones</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Suscripción</h4>
+                    <p>Recibe las últimas actualizaciones en tu correo</p>
+                    <form class="footer-form">
+                        <input type="email" placeholder="Ingresa tu correo" required />
+                        <button type="submit">SUSCRIBIRME</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2025 Mi Blog - Creado por Daniel Figueroa</span>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

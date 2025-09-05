@@ -1,5 +1,5 @@
 const fs = require("fs");
-//const { validarArticulo } = require("../helpers/validar")
+
 const Articulo = require("../modelos/articulo");
 const articulo = require("../modelos/articulo");
 
@@ -17,19 +17,19 @@ const curso = (req, res) => {
     )
 }   
 
-//Guardar el articulo en la base de datos
+
 const crear = async (req, res) => {
     try {
-        // Recoger los parametros por post a guardar
+
         let parametros = req.body;
 
-        // Crear el objeto guardar
+
         const articulo = new Articulo(parametros);
 
-        // Guardar el articulo en la base de datos
+
         const articuloGuardado = await articulo.save();
 
-        // Devolver el resultado
+
         return res.status(200).json({
             status: "success",
             articulo: articuloGuardado,
@@ -74,13 +74,10 @@ const listar = async (req, res) => {
 
 
 const uno = (req, res) => {
-    // Recoger un id por la url
     let id = req.params.id;
 
-    // Buscar artículo
     Articulo.findById(id)
         .then((articulo) => {
-            // Si no existe, devolver error
             if (!articulo) {
                 return res.status(400).json({
                     status: "Error",
@@ -88,15 +85,13 @@ const uno = (req, res) => {
                 });
             }
 
-            // Devolver resultado
             return res.status(200).json({
                 status: "Success",
                 articulo,
             });
         })
         .catch((error) => {
-            500
-            return res.status(400).json({
+            return res.status(500).json({
                 status: "Error",
                 mensaje: "Ha ocurrido un error al buscar el artículo",
             });
@@ -106,24 +101,35 @@ const uno = (req, res) => {
 const borrar = async (req, res) => {
     try {
         const articulo_id = req.params.id;
+
+
+        if (!articulo_id) {
+            return res.status(400).json({
+                status: "error",
+                mensaje: "No se proporcionó un ID válido"
+            });
+        }
+
+
         const articuloBorrado = await Articulo.findOneAndDelete({ _id: articulo_id });
 
         if (!articuloBorrado) {
-            return res.status(500).json({
+            return res.status(404).json({
                 status: "error",
-                mensaje: "Error al borrar el artículo"
+                mensaje: "No se encontró el artículo para borrar"
             });
         }
 
         return res.status(200).json({
-            status: "Success",
+            status: "success",
             articulo: articuloBorrado,
-            mensaje: "Método de borrar"
+            mensaje: "Artículo borrado correctamente"
         });
     } catch (error) {
+        console.error('Error al borrar:', error);
         return res.status(500).json({
             status: "error",
-            mensaje: "Error al borrar el artículo"
+            mensaje: "Error interno al borrar el artículo"
         });
     }
 }
@@ -132,30 +138,14 @@ const borrar = async (req, res) => {
 
 const editar = async (req, res) => {
     try {
-        // Recoger id del artículo a editar
         const articuloId = req.params.id;
 
-        // Recoger datos del body
         const parametros = req.body;
 
-        // Validar datos
-        /*
-        try {
-            validarArticulo(parametros);
-        } catch (error) {
-            return res.status(400).json({
-                status: "error",
-                mensaje: "faltan datos por enviar"
-            });
-        }
-*/
-
-
-        // Buscar y actualizar artículo utilizando async/await y promesas
         const articuloActualizado = await Articulo.findOneAndUpdate(
             { _id: articuloId },
             parametros,
-            { new: true } // Para devolver el artículo actualizado
+            { new: true } 
         );
 
         if (!articuloActualizado) {
@@ -165,7 +155,7 @@ const editar = async (req, res) => {
             });
         }
 
-        // Devolver respuesta
+
         return res.status(200).json({
             status: "success",
             articulo: articuloActualizado
@@ -182,9 +172,7 @@ const editar = async (req, res) => {
 
 const subir = async (req, res) => {
     try {
-        // Configurar multer
 
-        // Recoger el fichero de imagen subido
         if (!req.file && !req.files) {
             return res.status(404).json({
                 status: "error",
@@ -192,17 +180,13 @@ const subir = async (req, res) => {
             });
         }
 
-        // Nombre del archivo
         let archivo = req.file.originalname;
 
-        // Extensión del archivo
         let archivo_split = archivo.split(".");
         let archivo_extension = archivo_split[1];
 
-        // Comprobar extensión correcta
         if (archivo_extension !== "png" && archivo_extension !== "jpg" &&
             archivo_extension !== "jpeg" && archivo_extension !== "gif") {
-            // Borrar archivo y dar respuesta
             await new Promise((resolve, reject) => {
                 fs.unlink(req.file.path, (error) => {
                     if (error) {
@@ -232,6 +216,20 @@ const subir = async (req, res) => {
 };
 
 
+const rutas = (req, res) => {
+    return res.status(200).json({
+        mensaje: "Rutas disponibles",
+        rutas: {
+            crear: "POST /api/crear",
+            listar: "GET /api/listar",
+            uno: "GET /api/articulo/:id",
+            borrar: "DELETE /api/borrar/:id",
+            actualizar: "PUT /api/actualizar/:id",
+            subir_imagen: "POST /api/subir-imagen/:id"
+        }
+    });
+}
+
 
 module.exports = {
     prueba,
@@ -241,5 +239,6 @@ module.exports = {
     uno,
     borrar,
     editar,
-    subir
+    subir,
+    rutas
 }

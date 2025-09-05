@@ -6,51 +6,36 @@ console.log("App de node arrancada");
 
 conexion();
 
-//Crear servidor Node
 const app = express();
 const puerto = 3900;
 
-//Configurar cors
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5173', 'http://127.0.0.1:5173'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}));
 
-//Convertir body a objeto js
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+    next();
+});
+
 app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
-//Crear rutas
 const rutas_articulo = require("./rutas/articulo");
 
-//Cargo las rutas
 app.use("/api", rutas_articulo);
 
-//Rutas de prueba hardcodeadas
-app.get("/probando", (req, res) => {
-    console.log("Se ha ejecutado el endpoint probando");
-
-    return res.status(200).json([{
-        curso: "Master en React",
-        autor: "Carlos Arias",
-        url: "www.stscloud.com.gt"
-    },
-    {
-        curso: "Master en React",
-        autor: "Carlos Arias",
-        url: "www.stscloud.com.gt"
-    },
-    ]);
-});
-
-
 app.get("/", (req, res) => {
-    console.log("Se ha ejecutado el endpoint probando");
-
-    return res.status(200).send(
-        `<h1>Empezando a crear un api rest con NODE</h1>
-        `);
-    
+    return res.status(200).json({
+        mensaje: "Bienvenido a la API",
+        estado: "funcionando"
+    });
 });
 
-//Crear servidor y escucha de peticiones 
+//Crear servidor y escuchar peticiones
 app.listen(puerto, () => {
     console.log("Servidor corriendo en el puerto: " + puerto);
-}
-)
+});
